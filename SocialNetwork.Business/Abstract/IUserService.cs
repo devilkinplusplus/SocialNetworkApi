@@ -6,5 +6,6 @@ namespace SocialNetwork.Business.Abstract
     public interface IUserService
     {
         IDataResult<UserByEmailDTO> GetUserByEmail(string email);
+        // IDataResult<UserByIdDTO> GetUserId();
     }
 }

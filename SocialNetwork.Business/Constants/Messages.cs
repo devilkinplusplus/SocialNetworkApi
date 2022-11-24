@@ -6,5 +6,7 @@ namespace SocialNetwork.Business.Constants
         public static string UserExists = "User already exists.";
         public static string LoginError = "Email or password not correct.";
         public static string RegisterSuccessfully = "You have successfully registered. Check your email.";
+        public static string PostSuccess = "Post shared successfully.";
+        public static string NullReference = "Cannot be null.";
     }
 }
