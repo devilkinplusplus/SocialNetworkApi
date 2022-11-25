@@ -1,0 +1,81 @@
+using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
+using SocialNetwork.Business.Abstract;
+using static SocialNetwork.Entities.DTOs.PostDTO;
+
+namespace SocialNetwork.Api.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]/v1")]
+    public class ReactionController : ControllerBase
+    {
+        private readonly IReactionService _reactionService;
+        private readonly IUserService _userService;
+        public ReactionController(IReactionService reactionService, IUserService userService)
+        {
+            _reactionService = reactionService;
+            _userService = userService;
+        }
+
+        [Authorize]
+        [HttpPost("reaction")]
+        public IActionResult Reaction(LikePostDTO model)
+        {
+            var _bearer_token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jwtSecurityToken = handler.ReadJwtToken(_bearer_token);
+            var email = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "email")?.Value;
+            var user = _userService.GetUserByEmail(email);
+
+            var result = _reactionService.Like(model, user.Data.Id);
+
+            if (result.Success)
+            {
+                return Ok(result.Message);
+            }
+            return BadRequest(result.Message);
+        }
+
+        [Authorize]
+        [HttpGet("LikedPosts")]
+        public IActionResult LikedPosts()
+        {
+            var _bearer_token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jwtSecurityToken = handler.ReadJwtToken(_bearer_token);
+            var email = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "email")?.Value;
+            var user = _userService.GetUserByEmail(email);
+
+            var result = _reactionService.LikedPosts(user.Data.Id);
+            if (result.Success)
+            {
+                return Ok(result.Data);
+            }
+            return BadRequest(result.Message);
+        }
+
+        [Authorize]
+        [HttpGet("DislikedPost")]
+        public IActionResult DislikedPost()
+        {
+            var _bearer_token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jwtSecurityToken = handler.ReadJwtToken(_bearer_token);
+            var email = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "email")?.Value;
+            var user = _userService.GetUserByEmail(email);
+
+            var result = _reactionService.DisLikedPosts(user.Data.Id);
+            if (result.Success)
+            {
+                return Ok(result.Data);
+            }
+            return BadRequest(result.Message);
+        }
+    }
+}

@@ -12,25 +12,38 @@ using static SocialNetwork.Entities.DTOs.PostDTO;
 namespace SocialNetwork.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[controller]/v1")]
     public class PostController : ControllerBase
     {
         private readonly IPostService _postService;
-
-        public PostController(IPostService postService)
+        private readonly IUserService _userService;
+        public PostController(IPostService postService, IUserService userService)
         {
             _postService = postService;
+            _userService = userService;
         }
 
+
+        [Authorize]
         [HttpPost("share")]
         public IActionResult Share(SharePostDTO model)
         {
-            var result = _postService.Share(model);
+            var _bearer_token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jwtSecurityToken = handler.ReadJwtToken(_bearer_token);
+            var email = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "email")?.Value;
+
+            var user = _userService.GetUserByEmail(email);
+
+            var result = _postService.Share(model, user.Data.Id);
             if (result.Success)
             {
                 return Ok(result.Message);
             }
             return BadRequest(result.Message);
         }
+
+
+
     }
 }

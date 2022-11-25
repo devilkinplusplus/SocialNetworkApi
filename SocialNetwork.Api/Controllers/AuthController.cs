@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 using SocialNetwork.Business.Abstract;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using static SocialNetwork.Entities.DTOs.UserDTO;
 
 namespace SocialNetwork.Api.Controllers;
@@ -31,6 +34,7 @@ public class AuthController : ControllerBase
      [HttpPost("register")]
     public IActionResult Register(RegisterDTO model)
     {
+
         var result = _authService.Register(model);
         if (result.Success)
         {
