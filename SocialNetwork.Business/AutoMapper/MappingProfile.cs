@@ -22,8 +22,8 @@ namespace SocialNetwork.Business.AutoMapper
             CreateMap<SharePostDTO, Post>();
             CreateMap<Post, SharePostDTO>();
 
-            CreateMap<LikePostDTO, Reaction>();
-            CreateMap<Reaction, LikePostDTO>();
+            CreateMap<ReactPostDTO, Reaction>();
+            CreateMap<Reaction, ReactPostDTO>();
         }
     }
 }

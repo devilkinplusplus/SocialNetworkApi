@@ -21,7 +21,7 @@ namespace SocialNetwork.Core.Security.Jwt
                      new Claim (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                      new Claim (ClaimTypes.Role, role),
                  }),
-                Expires = DateTime.UtcNow.AddMinutes(1),
+                Expires = DateTime.UtcNow.AddMinutes(5),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
                 SecurityAlgorithms.HmacSha256Signature),
                 Issuer = "ComparAcademy",

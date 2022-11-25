@@ -12,6 +12,7 @@ using static SocialNetwork.Entities.DTOs.PostDTO;
 namespace SocialNetwork.Api.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]/v1")]
     public class ReactionController : ControllerBase
     {
@@ -23,9 +24,8 @@ namespace SocialNetwork.Api.Controllers
             _userService = userService;
         }
 
-        [Authorize]
-        [HttpPost("reaction")]
-        public IActionResult Reaction(LikePostDTO model)
+        [HttpPost("like")]
+        public IActionResult Like(ReactPostDTO model)
         {
             var _bearer_token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
             var handler = new JwtSecurityTokenHandler();
@@ -42,7 +42,24 @@ namespace SocialNetwork.Api.Controllers
             return BadRequest(result.Message);
         }
 
-        [Authorize]
+        [HttpPost("dislike")]
+        public IActionResult Dislike(ReactPostDTO model)
+        {
+            var _bearer_token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jwtSecurityToken = handler.ReadJwtToken(_bearer_token);
+            var email = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "email")?.Value;
+            var user = _userService.GetUserByEmail(email);
+
+            var result = _reactionService.DisLike(model, user.Data.Id);
+            if (result.Success)
+            {
+                return Ok(result.Message);
+            }
+            return BadRequest(result.Message);
+        }
+
+
         [HttpGet("LikedPosts")]
         public IActionResult LikedPosts()
         {
@@ -60,7 +77,6 @@ namespace SocialNetwork.Api.Controllers
             return BadRequest(result.Message);
         }
 
-        [Authorize]
         [HttpGet("DislikedPost")]
         public IActionResult DislikedPost()
         {

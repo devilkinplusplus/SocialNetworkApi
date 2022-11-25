@@ -26,6 +26,47 @@ namespace SocialNetwork.Business.Concrete
             _mapper = mapper;
         }
 
+
+        private void UpdateLikeStatus(ReactPostDTO postStatus, Guid userId, bool status)
+        {
+            var model = _mapper.Map<Reaction>(postStatus);
+            var checkedPost = _appdbContext.Reactions.Where(x => x.PostId == model.PostId && x.UserId == userId).FirstOrDefault();
+            checkedPost.UserId = userId;
+            checkedPost.PostId = postStatus.postId;
+            if (checkedPost.IsLike != status)
+            {
+                checkedPost.IsLike = status;
+            }
+            _reactionDal.Update(checkedPost);
+        }
+
+
+        public IResult DisLike(ReactPostDTO like, Guid userId)
+        {
+            try
+            {
+                var model = _mapper.Map<Reaction>(like);
+                model.UserId = userId;
+                model.PostId = like.postId;
+                model.IsLike = false;
+
+                var checkedPost = _appdbContext.Reactions.
+                Where(x => x.PostId == model.PostId && x.UserId == userId).FirstOrDefault();
+
+                if (checkedPost != null)
+                {
+                    UpdateLikeStatus(like, userId, false);
+                    return new SuccessResult(Messages.DisLikeThePost);
+                }
+                _reactionDal.Add(model);
+                return new SuccessResult(Messages.DisLikeThePost);
+            }
+            catch (Exception e)
+            {
+                return new ErrorResult(e.Message);
+            }
+        }
+
         public IDataResult<List<Reaction>> DisLikedPosts(Guid userId)
         {
             try
@@ -44,7 +85,7 @@ namespace SocialNetwork.Business.Concrete
             }
         }
 
-        public IResult Like(LikePostDTO like, Guid userId)
+        public IResult Like(ReactPostDTO like, Guid userId)
         {
             try
             {
@@ -52,6 +93,16 @@ namespace SocialNetwork.Business.Concrete
                 model.UserId = userId;
                 model.PostId = like.postId;
                 model.IsLike = true;
+
+                var checkedPost = _appdbContext.Reactions.
+               Where(x => x.PostId == model.PostId && x.UserId == userId).FirstOrDefault();
+                if (checkedPost != null)
+                {
+                    UpdateLikeStatus(like, userId, true);
+                    return new SuccessResult(Messages.LikeThePost);
+
+                }
+
                 _reactionDal.Add(model);
                 return new SuccessResult(Messages.LikeThePost);
             }
