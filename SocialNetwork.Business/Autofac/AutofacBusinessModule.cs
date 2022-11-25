@@ -21,6 +21,9 @@ namespace SocialNetwork.Business.Autofac
 
             builder.RegisterType<ReactionDal>().As<IReactionDal>();
             builder.RegisterType<ReactionManager>().As<IReactionService>();
+
+            builder.RegisterType<CommentDal>().As<ICommentDal>();
+            builder.RegisterType<CommentManager>().As<ICommentService>();
         }
     }
 }
