@@ -19,7 +19,7 @@ namespace SocialNetwork.Core.DataAccess.EntityFramework
         public void Delete(TEntity entity)
         {
             using var context = new TContext();
-            var removeEntity = context.Remove(entity);
+            var removeEntity = context.Entry(entity);
             removeEntity.State = EntityState.Deleted;
             context.SaveChanges();
         }

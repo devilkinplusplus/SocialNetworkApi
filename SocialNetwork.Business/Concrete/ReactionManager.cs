@@ -36,18 +36,21 @@ namespace SocialNetwork.Business.Concrete
             if (checkedPost.IsLike != status)
             {
                 checkedPost.IsLike = status;
+                _reactionDal.Update(checkedPost);
             }
-            _reactionDal.Update(checkedPost);
+            else if (checkedPost.IsLike == status)
+            {
+                _reactionDal.Delete(checkedPost);
+            }
         }
 
-
-        public IResult DisLike(ReactPostDTO like, Guid userId)
+        public IResult DisLike(ReactPostDTO dislike, Guid userId)
         {
             try
             {
-                var model = _mapper.Map<Reaction>(like);
+                var model = _mapper.Map<Reaction>(dislike);
                 model.UserId = userId;
-                model.PostId = like.postId;
+                model.PostId = dislike.postId;
                 model.IsLike = false;
 
                 var checkedPost = _appdbContext.Reactions.
@@ -55,7 +58,7 @@ namespace SocialNetwork.Business.Concrete
 
                 if (checkedPost != null)
                 {
-                    UpdateLikeStatus(like, userId, false);
+                    UpdateLikeStatus(dislike, userId, false);
                     return new SuccessResult(Messages.DisLikeThePost);
                 }
                 _reactionDal.Add(model);
@@ -100,7 +103,6 @@ namespace SocialNetwork.Business.Concrete
                 {
                     UpdateLikeStatus(like, userId, true);
                     return new SuccessResult(Messages.LikeThePost);
-
                 }
 
                 _reactionDal.Add(model);

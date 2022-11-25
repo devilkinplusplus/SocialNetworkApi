@@ -11,7 +11,7 @@ namespace SocialNetwork.Business.Abstract
     public interface IReactionService
     {
         IResult Like(ReactPostDTO like, Guid userId);
-        IResult DisLike(ReactPostDTO like, Guid userId);
+        IResult DisLike(ReactPostDTO dislike, Guid userId);
         IDataResult<List<Reaction>> LikedPosts(Guid userId);
         IDataResult<List<Reaction>> DisLikedPosts(Guid userId);
     }
