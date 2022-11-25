@@ -12,5 +12,7 @@ namespace SocialNetwork.Business.Constants
         public static string DisLikeThePost = "Post disliked.";
         public static string CountOfPosts = "Here you are.";
         public static string ZeroLikedPost = "You have not liked any post.";
+        public static string CommentShared = "Commented successfully";
+        public static string UpdateMessage = "Updated successfully";
     }
 }

@@ -1,6 +1,7 @@
 using AutoMapper;
 using SocialNetwork.Core.Entities.Concrete;
 using SocialNetwork.Entities.Concrete;
+using static SocialNetwork.Entities.DTOs.CommentDTO;
 using static SocialNetwork.Entities.DTOs.PostDTO;
 using static SocialNetwork.Entities.DTOs.UserDTO;
 
@@ -24,6 +25,9 @@ namespace SocialNetwork.Business.AutoMapper
 
             CreateMap<ReactPostDTO, Reaction>();
             CreateMap<Reaction, ReactPostDTO>();
+
+            CreateMap<Comment, ShareCommentDTO>();
+            CreateMap<ShareCommentDTO, Comment>();
         }
     }
 }
