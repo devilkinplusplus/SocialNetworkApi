@@ -19,11 +19,11 @@ namespace SocialNetwork.Business.AutoMapper
             CreateMap<UserByEmailDTO, User>();
             CreateMap<User, UserByEmailDTO>();
 
-            CreateMap<UserByIdDTO, User>();
-            CreateMap<User, UserByIdDTO>();
+            CreateMap<SharePostDTO, Post>();
+            CreateMap<Post, SharePostDTO>();
 
-            CreateMap<SharePostDTO,Post>();
-            CreateMap<Post,SharePostDTO>();
+            CreateMap<LikePostDTO, Reaction>();
+            CreateMap<Reaction, LikePostDTO>();
         }
     }
 }

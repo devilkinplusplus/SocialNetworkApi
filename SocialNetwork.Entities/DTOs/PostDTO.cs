@@ -8,5 +8,6 @@ namespace SocialNetwork.Entities.DTOs
     public class PostDTO
     {
         public record SharePostDTO(string content);
+        public record LikePostDTO(int postId);
     }
 }

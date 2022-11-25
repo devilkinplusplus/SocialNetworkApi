@@ -9,6 +9,6 @@ namespace SocialNetwork.Business.Abstract
 {
     public interface IPostService
     {
-        IResult Share(SharePostDTO post);
+        IResult Share(SharePostDTO post, Guid userId);
     }
 }

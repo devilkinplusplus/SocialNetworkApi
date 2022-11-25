@@ -9,6 +9,6 @@ namespace SocialNetwork.DataAccess.Abstract
 {
     public interface IPostDal : IRepositoryBase<Post>
     {
-
+        
     }
 }

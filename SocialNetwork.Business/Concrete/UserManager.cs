@@ -42,26 +42,6 @@ namespace SocialNetwork.Business.Concrete
                 return new ErrorDataResult<UserByEmailDTO>(e.Message);
             }
         }
-        //get with jwt token
-        // public IDataResult<UserByIdDTO> GetUserId()
-        // {
-        //     try
-        //     {   
-        //         var user = 12;
-        //         if (user != null)
-        //         {
-        //             var model = _mapper.Map<UserByIdDTO>(user);
-        //             return new SuccessDataResult<UserByIdDTO>(model);
-        //         }
-        //         else
-        //         {
-        //             return new ErrorDataResult<UserByIdDTO>(Messages.UserNotFound);
-        //         }
-        //     }
-        //     catch (Exception e)
-        //     {
-        //         throw;
-        //     }
-        // }
+        
     }
 }

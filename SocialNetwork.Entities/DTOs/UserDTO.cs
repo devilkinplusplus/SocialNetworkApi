@@ -4,7 +4,7 @@ namespace SocialNetwork.Entities.DTOs
     {
         public record LoginDTO(string Email, string Password);
         public record RegisterDTO(string Email, string Name, string Surname, string UserName, string Password, DateTime BirthDay);
-        public record UserByEmailDTO(string Email, string UserName, string Name, string Surname, DateTime BirthDay);
-        public record UserByIdDTO(Guid Id, string Email, string UserName, string Name, string Surname, DateTime BirthDay);
+        public record UserByEmailDTO(string Email, string UserName, string Name, string Surname, DateTime BirthDay,Guid Id);
+      
     }
 }

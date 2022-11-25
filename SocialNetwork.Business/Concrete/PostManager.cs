@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using SocialNetwork.Business.Abstract;
@@ -15,25 +16,20 @@ namespace SocialNetwork.Business.Concrete
     {
         private readonly IPostDal _postDal;
         private readonly IMapper _mapper;
-        private readonly IUserService _userService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        public PostManager(IPostDal postDal, IMapper mapper, IUserService userService, IHttpContextAccessor httpContextAccessor)
+        public PostManager(IPostDal postDal, IMapper mapper)
         {
             _postDal = postDal;
             _mapper = mapper;
-            _userService = userService;
-            _httpContextAccessor = httpContextAccessor;
         }
 
-        //not working properly
-        public IResult Share(SharePostDTO post)
+        public IResult Share(SharePostDTO post, Guid userId)
         {
             try
             {
                 if (post.content != null)
                 {
-                    var userid = _httpContextAccessor.HttpContext.User.FindFirst("nameid").Value;
                     var model = _mapper.Map<Post>(post);
+                    model.UserId = userId;
                     model.PublishDate = DateTime.Now;
                     _postDal.Add(model);
                     return new SuccessResult(Messages.PostSuccess);

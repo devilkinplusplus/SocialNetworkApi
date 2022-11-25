@@ -8,5 +8,8 @@ namespace SocialNetwork.Business.Constants
         public static string RegisterSuccessfully = "You have successfully registered. Check your email.";
         public static string PostSuccess = "Post shared successfully.";
         public static string NullReference = "Cannot be null.";
+        public static string LikeThePost = "Post liked.";
+        public static string CountOfPosts = "Here you are.";
+        public static string ZeroLikedPost = "You have not liked any post.";
     }
 }
