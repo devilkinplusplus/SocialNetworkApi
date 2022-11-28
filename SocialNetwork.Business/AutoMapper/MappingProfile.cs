@@ -28,6 +28,8 @@ namespace SocialNetwork.Business.AutoMapper
 
             CreateMap<Comment, ShareCommentDTO>();
             CreateMap<ShareCommentDTO, Comment>();
+
+            CreateMap<DeletePostDTO, Post>().ReverseMap();//same thing with upside
         }
     }
 }
