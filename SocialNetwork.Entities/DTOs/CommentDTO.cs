@@ -8,5 +8,6 @@ namespace SocialNetwork.Entities.DTOs
     public class CommentDTO
     {
         public record ShareCommentDTO(string content, int postId);
+        public record ReplyCommentDTO(string content, int commentId);
     }
 }
