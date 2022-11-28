@@ -31,11 +31,10 @@ namespace SocialNetwork.Api.Controllers
             var _bearer_token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
             var handler = new JwtSecurityTokenHandler();
             var jwtSecurityToken = handler.ReadJwtToken(_bearer_token);
-            var email = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "email")?.Value;
+            var id = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "nameid")?.Value;
 
-            var user = _userService.GetUserByEmail(email);
 
-            var result = _postService.Share(model, user.Data.Id);
+            var result = _postService.Share(model, Guid.Parse(id));
             if (result.Success)
             {
                 return Ok(result.Message);
@@ -50,11 +49,10 @@ namespace SocialNetwork.Api.Controllers
             var _bearer_token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
             var handler = new JwtSecurityTokenHandler();
             var jwtSecurityToken = handler.ReadJwtToken(_bearer_token);
-            var email = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "email")?.Value;
+            var id = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "nameid")?.Value;
 
-            var user = _userService.GetUserByEmail(email);
 
-            var result = _postService.Delete(postId, user.Data.Id);
+            var result = _postService.Delete(postId, Guid.Parse(id));
             if (result.Success)
             {
                 return Ok(result.Message);

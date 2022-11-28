@@ -30,6 +30,7 @@ namespace SocialNetwork.Business.AutoMapper
             CreateMap<ShareCommentDTO, Comment>();
 
             CreateMap<DeletePostDTO, Post>().ReverseMap();//same thing with upside
+            CreateMap<ReplyCommentDTO, CommentReply>().ReverseMap();
         }
     }
 }
