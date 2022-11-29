@@ -15,5 +15,7 @@ namespace SocialNetwork.Business.Constants
         public static string CommentShared = "Commented successfully";
         public static string UpdateMessage = "Updated successfully";
         public static string PostNotFound = "You don't have any post";
+        public static string CommentLiked = "Comment Liked";
+        public static string CommentUnliked = "Comment UnLiked";
     }
 }

@@ -30,7 +30,10 @@ namespace SocialNetwork.Business.Concrete
         private void UpdateLikeStatus(ReactPostDTO postStatus, Guid userId, bool status)
         {
             var model = _mapper.Map<Reaction>(postStatus);
-            var checkedPost = _appdbContext.Reactions.Where(x => x.PostId == model.PostId && x.UserId == userId).FirstOrDefault();
+            var checkedPost = _appdbContext.Reactions.
+            Where(x => x.PostId == model.PostId && x.UserId == userId).
+            FirstOrDefault();
+            
             checkedPost.UserId = userId;
             checkedPost.PostId = postStatus.postId;
             if (checkedPost.IsLike != status)
