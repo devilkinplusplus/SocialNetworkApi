@@ -9,6 +9,8 @@ using SocialNetwork.Core.Helpers.Result.Concrete.SuccessResults;
 using SocialNetwork.DataAccess.Abstract;
 using Microsoft.AspNetCore.Http;
 using static SocialNetwork.Entities.DTOs.UserDTO;
+using SocialNetwork.Entities.DTOs;
+using static SocialNetwork.Entities.DTOs.PostDTO;
 
 namespace SocialNetwork.Business.Concrete
 {
@@ -42,6 +44,18 @@ namespace SocialNetwork.Business.Concrete
                 return new ErrorDataResult<UserByEmailDTO>(e.Message);
             }
         }
-        
+
+        public IDataResult<IEnumerable<UserPostListDTO>> GetUserPosts(Guid userId)
+        {
+            try
+            {
+                var result = _userDal.GetUserPostList(userId);
+                return new SuccessDataResult<IEnumerable<UserPostListDTO>>(result);
+            }
+            catch (Exception e)
+            {
+                return new ErrorDataResult<IEnumerable<UserPostListDTO>>(e.Message);
+            }
+        }
     }
 }

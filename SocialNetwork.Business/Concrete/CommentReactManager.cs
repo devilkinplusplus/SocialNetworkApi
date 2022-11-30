@@ -21,46 +21,18 @@ namespace SocialNetwork.Business.Concrete
     {
         private readonly ICommentReactionDal _commentReactDal;
         private readonly IMapper _mapper;
-        private readonly AppDbContext _appDbContext = new();
         public CommentReactManager(ICommentReactionDal commentReactDal, IMapper mapper)
         {
             _commentReactDal = commentReactDal;
             _mapper = mapper;
         }
 
-        private void ReactStatus(ReactCommentDTO react, Guid userId,bool status)
-        {
-            var model = _mapper.Map<CommentReaction>(react);
-            model.UserId = userId;
-            model.CommentId = react.commentId;
-
-            if (model.IsLike != status)
-            {
-                model.IsLike = status;
-                _commentReactDal.Add(model);
-            }
-            else if (model.IsLike == status)
-            {
-                _commentReactDal.Delete(model);
-            }
-        }
-
-        public IResult ReactComment(ReactCommentDTO react, Guid userId)
+        public IResult ReactComment(int commentId, Guid userId)
         {
             try
             {
-                var mapper = _mapper.Map<CommentReaction>(react);
-                mapper.UserId = userId;
-                mapper.CommentId = react.commentId;
-                
-
-                if (mapper != null)
-                {
-                    ReactStatus(react,userId,true);
-                    return new SuccessResult(Messages.CommentLiked);
-                }
-                return new ErrorResult(Messages.NullReference);
-
+                _commentReactDal.CommentLike(commentId, userId);
+                return new SuccessResult(Messages.CommentLiked);
             }
             catch (Exception e)
             {

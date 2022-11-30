@@ -93,15 +93,15 @@ namespace SocialNetwork.Api.Controllers
             return BadRequest(result.Message);
         }
 
-        [HttpPost("reactComment")]
-        public IActionResult ReactComment(ReactCommentDTO model)
+        [HttpPost("reactComment/{commentId}")]
+        public IActionResult ReactComment(int commentId)
         {
             var _bearer_token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
             var handler = new JwtSecurityTokenHandler();
             var jwtSecurityToken = handler.ReadJwtToken(_bearer_token);
             var id = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "nameid")?.Value;
 
-            var result = _commentReactService.ReactComment(model, Guid.Parse(id));
+            var result = _commentReactService.ReactComment(commentId, Guid.Parse(id));
             if (result.Success)
             {
                 return Ok(result.Message);

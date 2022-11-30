@@ -9,5 +9,6 @@ namespace SocialNetwork.DataAccess.Abstract
 {
     public interface ICommentReactionDal : IRepositoryBase<CommentReaction>
     {
+        void CommentLike(int commentId, Guid userId);
     }
 }

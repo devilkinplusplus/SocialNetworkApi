@@ -9,6 +9,6 @@ namespace SocialNetwork.Business.Abstract
 {
     public interface ICommentReactService
     {
-        IResult ReactComment(ReactCommentDTO react,Guid userId);
+        IResult ReactComment(int commentId, Guid userId);
     }
 }

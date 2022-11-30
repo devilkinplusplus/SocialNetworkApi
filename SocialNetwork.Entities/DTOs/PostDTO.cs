@@ -9,6 +9,7 @@ namespace SocialNetwork.Entities.DTOs
     {
         public record SharePostDTO(string content);
         public record ReactPostDTO(int postId);
+        public record UserPostListDTO(int postId, string content, int likeCount);
         public record DeletePostDTO(int postId);
     }
 }
