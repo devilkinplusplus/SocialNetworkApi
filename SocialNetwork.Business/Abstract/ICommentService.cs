@@ -10,6 +10,6 @@ namespace SocialNetwork.Business.Abstract
     public interface ICommentService
     {
         IResult ShareComment(ShareCommentDTO comment, Guid userId);
-         IResult DeleteComment(int id, Guid userId);
+        IResult DeleteComment(int id, Guid userId);
     }
 }

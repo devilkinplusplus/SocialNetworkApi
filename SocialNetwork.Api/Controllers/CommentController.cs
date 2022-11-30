@@ -17,11 +17,13 @@ namespace SocialNetwork.Api.Controllers
     public class CommentController : ControllerBase
     {
         private readonly ICommentService _commentService;
+        private readonly IReplyService _replyService;
         private readonly IUserService _userService;
-        public CommentController(ICommentService commentService, IUserService userService)
+        public CommentController(ICommentService commentService, IUserService userService, IReplyService replyService)
         {
             _commentService = commentService;
             _userService = userService;
+            _replyService = replyService;
         }
 
         [HttpPost("comment")]
@@ -49,6 +51,23 @@ namespace SocialNetwork.Api.Controllers
             var id = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "nameid")?.Value;
 
             var result = _commentService.DeleteComment(commentId, Guid.Parse(id));
+            if (result.Success)
+            {
+                return Ok(result.Message);
+            }
+            return BadRequest(result.Message);
+        }
+
+
+        [HttpPost("replyComment")]
+        public IActionResult ReplyComment(ShareCommentDTO model)
+        {
+            var _bearer_token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jwtSecurityToken = handler.ReadJwtToken(_bearer_token);
+            var id = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "nameid")?.Value;
+
+            var result = _replyService.ShareComment(model, Guid.Parse(id));
             if (result.Success)
             {
                 return Ok(result.Message);
