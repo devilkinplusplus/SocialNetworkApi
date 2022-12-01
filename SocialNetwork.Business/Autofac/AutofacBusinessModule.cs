@@ -33,6 +33,9 @@ namespace SocialNetwork.Business.Autofac
 
             builder.RegisterType<RoleDal>().As<IRoleDal>();
             builder.RegisterType<RoleManager>().As<IRoleService>();
+
+            builder.RegisterType<UserRolDal>().As<IUserRoleDal>();
+            builder.RegisterType<UserRoleManager>().As<IUserRoleService>();
         }
     }
 }

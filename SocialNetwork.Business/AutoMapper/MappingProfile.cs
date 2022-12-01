@@ -35,6 +35,7 @@ namespace SocialNetwork.Business.AutoMapper
             CreateMap<UpdateUserDTO, User>().ReverseMap();
 
             CreateMap<CreateRoleDTO, Role>().ReverseMap();
+
         }
     }
 }

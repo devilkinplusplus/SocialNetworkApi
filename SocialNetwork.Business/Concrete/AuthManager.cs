@@ -17,12 +17,14 @@ namespace SocialNetwork.Business.Concrete
     {
         private readonly IUserDal _userDal;
         private readonly IUserService _userService;
+        private readonly IUserRoleService _userRoleService;
         private readonly IMapper _mapper;
-        public AuthManager(IUserDal userDal, IMapper mapper, IUserService userService)
+        public AuthManager(IUserDal userDal, IMapper mapper, IUserService userService, IUserRoleService userRoleService)
         {
             _userDal = userDal;
             _mapper = mapper;
             _userService = userService;
+            _userRoleService = userRoleService;
         }
 
         public IDataResult<User> GetUserByEmail(string email)
@@ -74,6 +76,8 @@ namespace SocialNetwork.Business.Concrete
                 model.PasswordSalt = passwordSalt;
                 model.ProfilePicture = "/";
                 _userDal.Add(model);
+
+                _userRoleService.AddRole("User", model.Id);
                 return new SuccessResult(Messages.RegisterSuccessfully);
             }
             catch (Exception e)

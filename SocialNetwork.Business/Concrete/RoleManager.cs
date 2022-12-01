@@ -27,6 +27,7 @@ namespace SocialNetwork.Business.Concrete
             _mapper = mapper;
         }
 
+     
         public IResult Create(CreateRoleDTO role)
         {
             try

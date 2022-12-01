@@ -8,10 +8,8 @@ using static SocialNetwork.Entities.DTOs.RoleDTO;
 
 namespace SocialNetwork.Business.Abstract
 {
-    public interface IRoleService
+    public interface IUserRoleService
     {
-        IResult Create(CreateRoleDTO role);
-        IDataResult<IEnumerable<Role>> ListAllRoles();
-        IResult Update(CreateRoleDTO role, Guid roleId);
+        IResult AddRole(string roleName, Guid userId);
     }
 }
