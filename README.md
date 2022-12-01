@@ -1,4 +1,7 @@
-"# SocialNetwork" 
+"# SocialNetwork"
 
-- Login Register
-- AutoMapper
+-User Roles
+-Advanced Login configurations
+-Follow User
+-Notifications
+-Logging
