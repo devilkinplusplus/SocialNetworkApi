@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using static SocialNetwork.Entities.DTOs.UserDTO;
 using SocialNetwork.Entities.DTOs;
 using static SocialNetwork.Entities.DTOs.PostDTO;
+using SocialNetwork.Core.Security.Hashing;
 
 namespace SocialNetwork.Business.Concrete
 {
@@ -55,6 +56,40 @@ namespace SocialNetwork.Business.Concrete
             catch (Exception e)
             {
                 return new ErrorDataResult<IEnumerable<UserPostListDTO>>(e.Message);
+            }
+        }
+
+        public IResult UpdateUser(UpdateUserDTO model, Guid userId)
+        {
+            try
+            {
+                var mapper = _mapper.Map<User>(model);
+                var currentUser = _userDal.Get(x => x.Id == userId);
+                if (currentUser != null)
+                {
+                    currentUser.Name = model.Name;
+                    currentUser.Surname = model.Surname;
+                    currentUser.UserName = model.UserName;
+                    currentUser.ProfilePicture = model.ProfilePicture;
+                    currentUser.BirthDay = model.BirthDay;
+
+                    byte[] passwordSalt, passwordHash;
+                    HashingHelper.HashPassword(model.Password, out passwordHash, out passwordSalt);
+                    currentUser.PasswordHash = passwordHash;
+                    currentUser.PasswordSalt = passwordSalt;
+                   
+                    _userDal.Update(currentUser);
+                    return new SuccessResult(Messages.UpdateMessage);
+                }
+                else
+                {
+                    return new ErrorResult(Messages.UserNotFound);
+                }
+
+            }
+            catch (Exception e)
+            {
+                return new ErrorResult(e.Message);
             }
         }
     }

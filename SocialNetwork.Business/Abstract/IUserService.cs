@@ -8,5 +8,6 @@ namespace SocialNetwork.Business.Abstract
     {
         IDataResult<UserByEmailDTO> GetUserByEmail(string email);
         IDataResult<IEnumerable<UserPostListDTO>> GetUserPosts(Guid userId);
+        IResult UpdateUser(UpdateUserDTO model, Guid userId);
     }
 }

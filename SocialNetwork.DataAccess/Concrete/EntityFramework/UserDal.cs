@@ -23,5 +23,7 @@ namespace SocialNetwork.DataAccess.Concrete
 
             return results;
         }
+
+    
     }
 }
