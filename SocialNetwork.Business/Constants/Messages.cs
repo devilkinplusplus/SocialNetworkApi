@@ -17,5 +17,13 @@ namespace SocialNetwork.Business.Constants
         public static string PostNotFound = "You don't have any post";
         public static string CommentLiked = "Comment Liked";
         public static string CommentUnliked = "Comment UnLiked";
+
+
+        public static string Created = "Created successfully";
+        public static string Deleted = "Deleted successfully";
+        public static string Updated = "Updated successfully";
+
+        public static string UnknownError = "Something went wrong";
+
     }
 }

@@ -30,6 +30,9 @@ namespace SocialNetwork.Business.Autofac
 
             builder.RegisterType<ReplyDal>().As<IReplyDal>();
             builder.RegisterType<ReplyManager>().As<IReplyService>();
+
+            builder.RegisterType<RoleDal>().As<IRoleDal>();
+            builder.RegisterType<RoleManager>().As<IRoleService>();
         }
     }
 }
