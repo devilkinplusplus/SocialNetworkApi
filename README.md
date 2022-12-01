@@ -1,7 +1,8 @@
 "# SocialNetwork"
 
--User Roles
--Advanced Login configurations
--Follow User
--Notifications
--Logging
+User Roles
+Advanced authentication
+Follow system
+Best Posts and Users
+Logging
+Ready
