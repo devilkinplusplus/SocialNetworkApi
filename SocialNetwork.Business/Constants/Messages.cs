@@ -16,7 +16,7 @@ namespace SocialNetwork.Business.Constants
         public static string UpdateMessage = "Updated successfully";
         public static string PostNotFound = "You don't have any post";
         public static string CommentLiked = "Comment Liked";
-        public static string CommentUnliked = "Comment UnLiked";
+        public static string LoginFailed = "You are blocked , try again in later.";
 
 
         public static string Created = "Created successfully";

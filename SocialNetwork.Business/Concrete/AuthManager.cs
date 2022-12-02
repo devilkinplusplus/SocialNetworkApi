@@ -40,21 +40,46 @@ namespace SocialNetwork.Business.Concrete
             }
         }
 
+        private bool IsLockoutEnabled(DateTime time, double additionalTime)
+        {
+            if (time.AddMinutes(additionalTime) <= DateTime.Now)
+                return true;
+            return false;
+        }
+
         public IResult Login(LoginDTO login)
         {
             try
             {
                 var findUserByEmail = GetUserByEmail(login.Email);
-                if (!findUserByEmail.Success)
-                    return new ErrorResult(Messages.LoginError);
 
-                var checkPassword = HashingHelper.VerifyPassword(login.Password, findUserByEmail.Data.PasswordHash, findUserByEmail.Data.PasswordSalt);
-                if (!checkPassword)
-                    return new ErrorResult(Messages.LoginError);
+                if (IsLockoutEnabled(findUserByEmail.Data.LoginFailedTime.GetValueOrDefault(), 1))
+                {
+                    if (!findUserByEmail.Success)
+                        return new ErrorResult(Messages.LoginError);
 
-                string token = TokenGenerator.Token(findUserByEmail.Data, "User");
+                    var checkPassword = HashingHelper.VerifyPassword(login.Password, findUserByEmail.Data.PasswordHash, findUserByEmail.Data.PasswordSalt);
+                    if (!checkPassword)
+                    {
+                        findUserByEmail.Data.FailedLogin++;
+                        if (findUserByEmail.Data.FailedLogin == 5)
+                        {
+                            findUserByEmail.Data.FailedLogin = 0;
+                            findUserByEmail.Data.LoginFailedTime = DateTime.Now;
+                        }
+                        _userDal.Update(findUserByEmail.Data);
+                        return new ErrorResult(Messages.LoginError);
+                    }
 
-                return new SuccessResult(token);
+                    string token = TokenGenerator.Token(findUserByEmail.Data, "User");
+                    findUserByEmail.Data.FailedLogin = 0;
+                    _userDal.Update(findUserByEmail.Data);
+                    return new SuccessResult(token);
+                }
+                else
+                {
+                    return new ErrorResult(Messages.LoginFailed);
+                }
             }
             catch (Exception e)
             {
