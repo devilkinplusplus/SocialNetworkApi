@@ -1,6 +1,5 @@
 using System.Security.Claims;
 using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using SocialNetwork.Business.Abstract;
 using SocialNetwork.Business.Constants;
 using SocialNetwork.Core.Helpers.Result.Abstract;
@@ -17,6 +16,7 @@ namespace SocialNetwork.Business.Concrete
     {
         private readonly IPostDal _postDal;
         private readonly IMapper _mapper;
+
         private readonly AppDbContext _appdbContext = new();
 
         public PostManager(IPostDal postDal, IMapper mapper)
@@ -80,6 +80,7 @@ namespace SocialNetwork.Business.Concrete
                     var model = _mapper.Map<Post>(post);
                     model.UserId = userId;
                     model.PublishDate = DateTime.Now;
+                    model.PhotoUrl = (post.photoUrl == null) ? null : post.photoUrl.FileName;
                     _postDal.Add(model);
                     return new SuccessResult(Messages.PostSuccess);
                 }
