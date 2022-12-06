@@ -15,6 +15,7 @@ namespace SocialNetwork.Core.Entities.Concrete
         public bool IsBlocked { get; set; }
         public int FailedLogin { get; set; }
         public bool EmailConfirmed { get; set; }
+        public bool IsPrivate { get; set; }
         public DateTime? LoginFailedTime { get; set; }
         public List<UserRole> UserRoles { get; set; }
     }

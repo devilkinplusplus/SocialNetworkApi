@@ -72,12 +72,12 @@ namespace SocialNetwork.Business.Concrete
                     currentUser.UserName = model.UserName;
                     currentUser.ProfilePicture = model.ProfilePicture;
                     currentUser.BirthDay = model.BirthDay;
-
+                    currentUser.IsPrivate = model.IsPrivate;
                     byte[] passwordSalt, passwordHash;
                     HashingHelper.HashPassword(model.Password, out passwordHash, out passwordSalt);
                     currentUser.PasswordHash = passwordHash;
                     currentUser.PasswordSalt = passwordSalt;
-                   
+
                     _userDal.Update(currentUser);
                     return new SuccessResult(Messages.UpdateMessage);
                 }

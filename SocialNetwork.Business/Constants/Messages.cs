@@ -18,7 +18,8 @@ namespace SocialNetwork.Business.Constants
         public static string CommentLiked = "Comment Liked";
         public static string LoginFailed = "You are blocked , try again in later.";
 
-
+        public static string SuccessMessage = "Success";
+        public static string FailMessage = "Failed";
         public static string Created = "Created successfully";
         public static string Deleted = "Deleted successfully";
         public static string Updated = "Updated successfully";

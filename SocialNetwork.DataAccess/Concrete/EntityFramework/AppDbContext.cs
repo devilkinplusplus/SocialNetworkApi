@@ -19,5 +19,6 @@ namespace SocialNetwork.DataAccess.Concrete
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Reply> Replies { get; set; }
         public DbSet<CommentReaction> CommentReactions { get; set; }
+        public DbSet<Follow> Follows { get; set; }
     }
 }

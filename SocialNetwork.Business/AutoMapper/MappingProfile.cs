@@ -2,6 +2,7 @@ using AutoMapper;
 using SocialNetwork.Core.Entities.Concrete;
 using SocialNetwork.Entities.Concrete;
 using static SocialNetwork.Entities.DTOs.CommentDTO;
+using static SocialNetwork.Entities.DTOs.FollowDTO;
 using static SocialNetwork.Entities.DTOs.PostDTO;
 using static SocialNetwork.Entities.DTOs.RoleDTO;
 using static SocialNetwork.Entities.DTOs.UserDTO;
@@ -36,6 +37,7 @@ namespace SocialNetwork.Business.AutoMapper
 
             CreateMap<CreateRoleDTO, Role>().ReverseMap();
 
+            CreateMap<StartFollowingDTO, Follow>().ReverseMap();
         }
     }
 }
