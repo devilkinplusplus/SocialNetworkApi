@@ -7,7 +7,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 using SocialNetwork.Business.Abstract;
+using SocialNetwork.Entities.Concrete;
 using static SocialNetwork.Entities.DTOs.PostDTO;
+using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace SocialNetwork.Api.Controllers
 {
@@ -17,22 +19,36 @@ namespace SocialNetwork.Api.Controllers
     {
         private readonly IPostService _postService;
         private readonly IUserService _userService;
-        public PostController(IPostService postService, IUserService userService)
+        private readonly IWebHostEnvironment _environment;
+        public PostController(IPostService postService, IUserService userService, IWebHostEnvironment environment)
         {
             _postService = postService;
             _userService = userService;
+            _environment = environment;
         }
 
 
         [Authorize]
         [HttpPost("share")]
-        public IActionResult Share(SharePostDTO model)
+        public async Task<IActionResult> Share([FromForm] SharePostDTO model)
         {
             var _bearer_token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
             var handler = new JwtSecurityTokenHandler();
             var jwtSecurityToken = handler.ReadJwtToken(_bearer_token);
             var id = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "nameid")?.Value;
 
+            if (model.photoUrl != null)
+            {
+                if (!Directory.Exists(_environment.WebRootPath + "\\images\\posts\\"))
+                {
+                    Directory.CreateDirectory(_environment.WebRootPath + "\\images\\posts\\");
+                }
+                using (FileStream fileStream = System.IO.File.Create(_environment.WebRootPath + "\\images\\posts\\" + model.photoUrl.FileName))
+                {
+                    model.photoUrl.CopyTo(fileStream);
+                    fileStream.Flush();
+                }
+            }
 
             var result = _postService.Share(model, Guid.Parse(id));
             if (result.Success)
