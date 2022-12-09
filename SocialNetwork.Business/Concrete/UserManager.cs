@@ -12,6 +12,8 @@ using static SocialNetwork.Entities.DTOs.UserDTO;
 using SocialNetwork.Entities.DTOs;
 using static SocialNetwork.Entities.DTOs.PostDTO;
 using SocialNetwork.Core.Security.Hashing;
+using SocialNetwork.Business.Validators;
+using FluentValidation.Results;
 
 namespace SocialNetwork.Business.Concrete
 {
@@ -70,21 +72,24 @@ namespace SocialNetwork.Business.Concrete
                     currentUser.Name = model.Name;
                     currentUser.Surname = model.Surname;
                     currentUser.UserName = model.UserName;
-                    currentUser.ProfilePicture = model.ProfilePicture;
                     currentUser.BirthDay = model.BirthDay;
                     currentUser.IsPrivate = model.IsPrivate;
+                    currentUser.ProfilePicture = (model.PhotoUrl == null) ? null : model.PhotoUrl.FileName;
                     byte[] passwordSalt, passwordHash;
                     HashingHelper.HashPassword(model.Password, out passwordHash, out passwordSalt);
                     currentUser.PasswordHash = passwordHash;
                     currentUser.PasswordSalt = passwordSalt;
 
-                    _userDal.Update(currentUser);
-                    return new SuccessResult(Messages.UpdateMessage);
+                    UserValidator validationRules = new UserValidator();
+                    ValidationResult result = validationRules.Validate(currentUser);
+                    if (result.IsValid)
+                    {
+                        _userDal.Update(currentUser);
+                        return new SuccessResult(Messages.UpdateMessage);
+                    }
                 }
-                else
-                {
-                    return new ErrorResult(Messages.UserNotFound);
-                }
+
+                return new ErrorResult(Messages.UserNotFound);
 
             }
             catch (Exception e)

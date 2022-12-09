@@ -13,5 +13,6 @@ namespace SocialNetwork.Business.Abstract
         IResult Share(SharePostDTO post, Guid userId);
         IDataResult<Post> Delete(int id, Guid userId);
         IDataResult<List<Post>> GetPostsByUser(Guid userId);
+        IDataResult<List<Post>> Suggestions(Guid userId);
     }
 }

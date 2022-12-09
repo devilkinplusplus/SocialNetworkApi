@@ -14,6 +14,7 @@ using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 namespace SocialNetwork.Api.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]/v1")]
     public class PostController : ControllerBase
     {
@@ -28,7 +29,6 @@ namespace SocialNetwork.Api.Controllers
         }
 
 
-        [Authorize]
         [HttpPost("share")]
         public async Task<IActionResult> Share([FromForm] SharePostDTO model)
         {
@@ -58,7 +58,6 @@ namespace SocialNetwork.Api.Controllers
             return BadRequest(result.Message);
         }
 
-        [Authorize]
         [HttpPut("delete")]
         public IActionResult Delete(int postId)
         {
@@ -76,7 +75,6 @@ namespace SocialNetwork.Api.Controllers
             return BadRequest(result.Message);
         }
 
-        [Authorize]
         [HttpGet("userPosts")]
         public IActionResult UserPost()
         {
@@ -86,6 +84,22 @@ namespace SocialNetwork.Api.Controllers
             var id = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "nameid")?.Value;
 
             var result = _postService.GetPostsByUser(Guid.Parse(id));
+            if (result.Success)
+            {
+                return Ok(result.Data);
+            }
+            return BadRequest(result.Message);
+        }
+
+        [HttpGet("suggestionPosts")]
+        public IActionResult Suggestions()
+        {
+            var _bearer_token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jwtSecurityToken = handler.ReadJwtToken(_bearer_token);
+            var id = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "nameid")?.Value;
+
+            var result = _postService.Suggestions(Guid.Parse(id));
             if (result.Success)
             {
                 return Ok(result.Data);

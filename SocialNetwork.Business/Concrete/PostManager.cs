@@ -2,6 +2,7 @@ using System.Security.Claims;
 using AutoMapper;
 using SocialNetwork.Business.Abstract;
 using SocialNetwork.Business.Constants;
+using SocialNetwork.Core.Entities.Concrete;
 using SocialNetwork.Core.Helpers.Result.Abstract;
 using SocialNetwork.Core.Helpers.Result.Concrete.ErrorResults;
 using SocialNetwork.Core.Helpers.Result.Concrete.SuccessResults;
@@ -17,7 +18,6 @@ namespace SocialNetwork.Business.Concrete
         private readonly IPostDal _postDal;
         private readonly IMapper _mapper;
 
-        private readonly AppDbContext _appdbContext = new();
 
         public PostManager(IPostDal postDal, IMapper mapper)
         {
@@ -29,6 +29,7 @@ namespace SocialNetwork.Business.Concrete
         {
             try
             {
+                using var _appdbContext = new AppDbContext();
                 var checkedPost = _appdbContext.Posts.
                 Where(x => x.Id == id && x.UserId == userId).FirstOrDefault();
 
@@ -54,6 +55,7 @@ namespace SocialNetwork.Business.Concrete
         {
             try
             {
+                using var _appdbContext = new AppDbContext();
                 var posts = _appdbContext.Posts.
                 Where(x => x.UserId == userId && x.IsDeleted == false).ToList();
                 if (posts != null)
@@ -92,6 +94,46 @@ namespace SocialNetwork.Business.Concrete
             catch (Exception e)
             {
                 return new ErrorResult(e.Message);
+            }
+        }
+
+        public IDataResult<List<Post>> Suggestions(Guid userId)
+        {
+            try
+            {
+                using var _appdbContext = new AppDbContext();
+                var followingUsers = _appdbContext.Follows
+                                    .Where(x => x.FollowerId != userId && x.Following.IsPrivate == false)
+                                    .Select(x => x.FollowingId).ToList();
+
+                List<Post> suggestionPosts = new();
+
+                if (followingUsers.Count == 0)
+                {
+                    var posts = _appdbContext.Posts.Where(x => x.IsDeleted == false).ToList();
+                    suggestionPosts.AddRange(posts);
+                }
+
+                for (int i = 0; i < followingUsers.Count; i++)
+                {
+                    var post = _appdbContext.Posts.Where(x => x.UserId != followingUsers[i] && x.IsDeleted == false);
+                    foreach (var item in post)
+                    {
+                        if(!suggestionPosts.Contains(item))
+                            suggestionPosts.Add(item);
+                    }
+                }
+                if (suggestionPosts.Count == 0)
+                {
+                    var posts = _appdbContext.Posts.Where(x => x.IsDeleted == false).ToList();
+                    suggestionPosts.AddRange(posts);
+                }
+                return new SuccessDataResult<List<Post>>(suggestionPosts);
+
+            }
+            catch (Exception e)
+            {
+                return new ErrorDataResult<List<Post>>(e.Message);
             }
         }
     }

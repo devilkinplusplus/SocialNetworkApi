@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 using SocialNetwork.Business.Abstract;
@@ -17,10 +18,12 @@ namespace SocialNetwork.Api.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IWebHostEnvironment _environment;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IWebHostEnvironment environment)
         {
             _userService = userService;
+            _environment = environment;
         }
 
         [HttpGet("getuser/{email}")]
@@ -44,12 +47,26 @@ namespace SocialNetwork.Api.Controllers
         }
 
         [HttpPut("updateUser")]
-        public IActionResult UpdateUser(UpdateUserDTO model)
+        public IActionResult UpdateUser([FromForm] UpdateUserDTO model)
         {
             var _bearer_token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
             var handler = new JwtSecurityTokenHandler();
             var jwtSecurityToken = handler.ReadJwtToken(_bearer_token);
             var id = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "nameid")?.Value;
+
+            if (model.PhotoUrl != null)
+            {
+                if (!Directory.Exists(_environment.WebRootPath + "\\images\\profilePictures\\"))
+                {
+                    Directory.CreateDirectory(_environment.WebRootPath + "\\images\\profilePictures\\");
+                }
+                using (FileStream fileStream = System.IO.File.Create(_environment.WebRootPath + "\\images\\profilePictures\\" + model.PhotoUrl.FileName))
+                {
+                    model.PhotoUrl.CopyTo(fileStream);
+                    fileStream.Flush();
+                }
+            }
+
 
             var result = _userService.UpdateUser(model, Guid.Parse(id));
             if (result.Success)

@@ -81,7 +81,7 @@ namespace SocialNetwork.Business.Concrete
                 var dislikedPosts = _appdbContext.Reactions.Where(x => x.IsLike == false && x.UserId == userId).ToList();
                 if (dislikedPosts.Count > 0)
                 {
-                    return new SuccessDataResult<List<Reaction>>(dislikedPosts, Messages.CountOfPosts);
+                    return new SuccessDataResult<List<Reaction>>(dislikedPosts);
                 }
                 return new ErrorDataResult<List<Reaction>>(dislikedPosts, Messages.ZeroLikedPost);
             }
@@ -125,7 +125,7 @@ namespace SocialNetwork.Business.Concrete
                 var likedPosts = _appdbContext.Reactions.Where(x => x.IsLike == true && x.UserId == userId).ToList();
                 if (likedPosts.Count > 0)
                 {
-                    return new SuccessDataResult<List<Reaction>>(likedPosts, Messages.CountOfPosts);
+                    return new SuccessDataResult<List<Reaction>>(likedPosts);
                 }
                 return new ErrorDataResult<List<Reaction>>(likedPosts, Messages.ZeroLikedPost);
             }
