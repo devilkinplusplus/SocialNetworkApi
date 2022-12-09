@@ -11,5 +11,6 @@ namespace SocialNetwork.Entities.DTOs
                                      DateTime BirthDay, Guid Id);
         public record UpdateUserDTO(string Name, string Surname, string UserName, string Password,
                                     DateTime BirthDay, bool IsPrivate, IFormFile? PhotoUrl);
+ 
     }
 }

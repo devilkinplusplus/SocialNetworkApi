@@ -101,33 +101,7 @@ namespace SocialNetwork.Business.Concrete
         {
             try
             {
-                using var _appdbContext = new AppDbContext();
-                var followingUsers = _appdbContext.Follows
-                                    .Where(x => x.FollowerId != userId && x.Following.IsPrivate == false)
-                                    .Select(x => x.FollowingId).ToList();
-
-                List<Post> suggestionPosts = new();
-
-                if (followingUsers.Count == 0)
-                {
-                    var posts = _appdbContext.Posts.Where(x => x.IsDeleted == false).ToList();
-                    suggestionPosts.AddRange(posts);
-                }
-
-                for (int i = 0; i < followingUsers.Count; i++)
-                {
-                    var post = _appdbContext.Posts.Where(x => x.UserId != followingUsers[i] && x.IsDeleted == false);
-                    foreach (var item in post)
-                    {
-                        if(!suggestionPosts.Contains(item))
-                            suggestionPosts.Add(item);
-                    }
-                }
-                if (suggestionPosts.Count == 0)
-                {
-                    var posts = _appdbContext.Posts.Where(x => x.IsDeleted == false).ToList();
-                    suggestionPosts.AddRange(posts);
-                }
+                var suggestionPosts = _postDal.GetSuggestionPosts(userId);
                 return new SuccessDataResult<List<Post>>(suggestionPosts);
 
             }
