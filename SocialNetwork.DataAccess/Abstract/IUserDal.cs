@@ -8,6 +8,5 @@ namespace SocialNetwork.DataAccess.Abstract
     public interface IUserDal : IRepositoryBase<User>
     {
         IEnumerable<UserPostListDTO> GetUserPostList(Guid userId);
-        IEnumerable<User> GetMostActiveUsers();
     }
 }

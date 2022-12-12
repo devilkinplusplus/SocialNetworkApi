@@ -27,6 +27,22 @@ namespace SocialNetwork.Business.Concrete
             _mapper = mapper;
         }
 
+        public IDataResult<IEnumerable<User>> GetAllUsers()
+        {
+            try
+            {
+                var data = _userDal.GetAll();
+                if(data!=null){
+                    return new SuccessDataResult<IEnumerable<User>>(data);
+                }
+                return new ErrorDataResult<IEnumerable<User>>(data,Messages.UserNotFound);
+            }
+            catch (Exception e)
+            {
+                return new ErrorDataResult<IEnumerable<User>>(e.Message);
+            }
+        }
+
         public IDataResult<UserByEmailDTO> GetUserByEmail(string email)
         {
             try

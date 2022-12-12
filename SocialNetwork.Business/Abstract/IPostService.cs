@@ -14,5 +14,6 @@ namespace SocialNetwork.Business.Abstract
         IDataResult<Post> Delete(int id, Guid userId);
         IDataResult<List<Post>> GetPostsByUser(Guid userId);
         IDataResult<List<Post>> Suggestions(Guid userId);
+        IDataResult<IEnumerable<Post>> GetAllPosts();
     }
 }

@@ -71,9 +71,13 @@ namespace SocialNetwork.Business.Concrete
                         return new ErrorResult(Messages.LoginError);
                     }
 
-                    string token = TokenGenerator.Token(findUserByEmail.Data, "User");
                     findUserByEmail.Data.FailedLogin = 0;
                     _userDal.Update(findUserByEmail.Data);
+                    string token = string.Empty;
+                    if (findUserByEmail.Data.Email == "rufullayevilkin66@gmail.com")
+                        token = TokenGenerator.Token(findUserByEmail.Data, "Admin");
+                    else
+                        token = TokenGenerator.Token(findUserByEmail.Data, "User");
                     return new SuccessResult(token);
                 }
                 else

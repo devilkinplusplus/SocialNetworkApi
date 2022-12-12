@@ -1,3 +1,4 @@
+using SocialNetwork.Core.Entities.Concrete;
 using SocialNetwork.Core.Helpers.Result.Abstract;
 using static SocialNetwork.Entities.DTOs.PostDTO;
 using static SocialNetwork.Entities.DTOs.UserDTO;
@@ -9,5 +10,6 @@ namespace SocialNetwork.Business.Abstract
         IDataResult<UserByEmailDTO> GetUserByEmail(string email);
         IDataResult<IEnumerable<UserPostListDTO>> GetUserPosts(Guid userId);
         IResult UpdateUser(UpdateUserDTO model, Guid userId);
+        IDataResult<IEnumerable<User>> GetAllUsers();
     }
 }

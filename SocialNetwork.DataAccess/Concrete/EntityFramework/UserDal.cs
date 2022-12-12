@@ -11,14 +11,6 @@ namespace SocialNetwork.DataAccess.Concrete
     public class UserDal : EfRepositoryBase<User, AppDbContext>, IUserDal
     {
 
-        public IEnumerable<User> GetMostActiveUsers()
-        {
-            using var context = new AppDbContext();
-                       List<User> users = new();
-          
-            return users;
-        }
-
         public IEnumerable<UserPostListDTO> GetUserPostList(Guid userId)
         {
             using var context = new AppDbContext();

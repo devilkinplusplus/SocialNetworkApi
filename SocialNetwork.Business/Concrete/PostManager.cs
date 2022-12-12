@@ -51,6 +51,23 @@ namespace SocialNetwork.Business.Concrete
             }
         }
 
+        public IDataResult<IEnumerable<Post>> GetAllPosts()
+        {
+            try
+            {
+                var data = _postDal.GetAll(x => x.IsDeleted == false);
+                if (data != null)
+                {
+                    return new SuccessDataResult<IEnumerable<Post>>(data);
+                }
+                return new ErrorDataResult<IEnumerable<Post>>(data, Messages.PostNotFound);
+            }
+            catch (Exception e)
+            {
+                return new ErrorDataResult<IEnumerable<Post>>(e.Message);
+            }
+        }
+
         public IDataResult<List<Post>> GetPostsByUser(Guid userId)
         {
             try
