@@ -39,6 +39,9 @@ namespace SocialNetwork.Business.Autofac
 
             builder.RegisterType<FollowDal>().As<IFollowDal>();
             builder.RegisterType<FollowManager>().As<IFollowService>();
+
+            builder.RegisterType<ContactDal>().As<IContactDal>();
+            builder.RegisterType<ContactManager>().As<IContactService>();
         }
     }
 }
