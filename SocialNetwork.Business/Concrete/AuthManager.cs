@@ -8,6 +8,7 @@ using SocialNetwork.Core.Helpers.Result.Concrete.SuccessResults;
 using SocialNetwork.Core.Security.Hashing;
 using SocialNetwork.Core.Security.Jwt;
 using SocialNetwork.DataAccess.Abstract;
+using SocialNetwork.DataAccess.Concrete;
 using SocialNetwork.Entities.DTOs;
 using static SocialNetwork.Entities.DTOs.UserDTO;
 
@@ -16,15 +17,19 @@ namespace SocialNetwork.Business.Concrete
     public class AuthManager : IAuthService
     {
         private readonly IUserDal _userDal;
+        private readonly IRoleDal _roleDal;
+        private readonly IUserRoleDal _userRoleDal;
         private readonly IUserService _userService;
         private readonly IUserRoleService _userRoleService;
         private readonly IMapper _mapper;
-        public AuthManager(IUserDal userDal, IMapper mapper, IUserService userService, IUserRoleService userRoleService)
+        public AuthManager(IUserDal userDal, IMapper mapper, IUserService userService, IUserRoleService userRoleService, IRoleDal roleDal, IUserRoleDal userRoleDal)
         {
             _userDal = userDal;
             _mapper = mapper;
             _userService = userService;
             _userRoleService = userRoleService;
+            _roleDal = roleDal;
+            _userRoleDal = userRoleDal;
         }
 
         public IDataResult<User> GetUserByEmail(string email)
@@ -44,6 +49,22 @@ namespace SocialNetwork.Business.Concrete
         {
             if (time.AddMinutes(additionalTime) <= DateTime.Now)
                 return true;
+            return false;
+        }
+
+        private bool IsAdminSignin(Guid userId)
+        {
+            using var context = new AppDbContext();
+            var roleAdminId = context.Roles.Where(x => x.RoleName == "Admin").Select(x => x.Id).FirstOrDefault();
+            var admins = context.UserRoles.Where(x => x.RoleId == roleAdminId).Select(x => x.UserId).ToList();
+
+            foreach (var item in admins)
+            {
+                if (admins.Contains(userId))
+                {
+                    return true;
+                }
+            }
             return false;
         }
 
@@ -70,14 +91,20 @@ namespace SocialNetwork.Business.Concrete
                         _userDal.Update(findUserByEmail.Data);
                         return new ErrorResult(Messages.LoginError);
                     }
+                    if (findUserByEmail.Data.FailedLogin != 0)
+                    {
+                        findUserByEmail.Data.FailedLogin = 0;
+                        _userDal.Update(findUserByEmail.Data);
+                    }
 
-                    findUserByEmail.Data.FailedLogin = 0;
-                    _userDal.Update(findUserByEmail.Data);
-                    string token = string.Empty;
-                    if (findUserByEmail.Data.Email == "rufullayevilkin66@gmail.com")
-                        token = TokenGenerator.Token(findUserByEmail.Data, "Admin");
+                    string roleName = string.Empty;
+                    if (IsAdminSignin(findUserByEmail.Data.Id))
+                        roleName = "Admin";
                     else
-                        token = TokenGenerator.Token(findUserByEmail.Data, "User");
+                        roleName = "User";
+
+                    string token = TokenGenerator.Token(findUserByEmail.Data, roleName);
+
                     return new SuccessResult(token);
                 }
                 else
@@ -105,7 +132,6 @@ namespace SocialNetwork.Business.Concrete
                 model.PasswordSalt = passwordSalt;
                 model.ProfilePicture = "/";
                 _userDal.Add(model);
-
                 _userRoleService.AddRole("User", model.Id);
                 return new SuccessResult(Messages.RegisterSuccessfully);
             }
